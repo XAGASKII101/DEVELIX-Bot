@@ -16,6 +16,8 @@ externalPort = 80
 
 [env]
 PORT = "5000"
+REPLIT_KEEP_PACKAGE_DEV_DEPENDENCIES = "1"
+REPLIT_DISABLE_PACKAGE_LAYER = "1"
 
 [workflows]
 runButton = "Project"
