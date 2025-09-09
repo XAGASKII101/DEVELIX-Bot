@@ -64,30 +64,91 @@ async function handleMainMenu(phoneNumber: string, messageText: string, userStat
   // Handle numbered menu options
   switch (input) {
     case '1':
+    case 'custom':
+    case 'custom development':
+    case 'development':
+    case 'dev':
       return getCustomDevelopmentInfo(userState);
     case '2':
+    case 'products':
+    case 'product':
+    case 'apps':
+    case 'app':
       return getProductsInfo();
     case '3':
+    case 'ai':
+    case 'artificial intelligence':
+    case 'ml':
+    case 'machine learning':
       return getAIInfo();
     case '4':
+    case 'web':
+    case 'website':
+    case 'web development':
+    case 'web dev':
       return getWebDevInfo();
     case '5':
+    case 'blockchain':
+    case 'elixa':
+    case 'crypto':
+    case 'defi':
       return getBlockchainInfo();
     case '6':
+    case 'vendra':
+    case 'marketplace':
       return getVendraInfo();
     case '7':
+    case 'portfolio':
+    case 'showcase':
+    case 'projects':
+    case 'case studies':
       return getPortfolioInfo();
     case '8':
+    case 'quote':
+    case 'quotes':
+    case 'qoute':
+    case 'qotw':
+    case 'consultation':
+    case 'consult':
+    case 'estimate':
       return getQuoteInfo(userState);
     case '9':
+    case 'contact':
+    case 'support':
+    case 'help':
+    case 'reach':
       return getContactInfo();
     case 'menu':
     case 'start':
-    case 'help':
+    case 'main':
+    case 'home':
       return getMainMenu();
     default:
-      if (input.includes('project') || input.includes('quote') || input.includes('development')) {
-        return getCustomDevelopmentInfo(userState);
+      // Handle keyword matching for more flexibility
+      if (input.includes('project') || input.includes('quote') || input.includes('qoute') || 
+          input.includes('development') || input.includes('estimate') || input.includes('consult')) {
+        return getQuoteInfo(userState);
+      }
+      if (input.includes('ai') || input.includes('artificial') || input.includes('machine')) {
+        return getAIInfo();
+      }
+      if (input.includes('web') || input.includes('website')) {
+        return getWebDevInfo();
+      }
+      if (input.includes('blockchain') || input.includes('crypto') || input.includes('elixa')) {
+        return getBlockchainInfo();
+      }
+      if (input.includes('vendra') || input.includes('marketplace')) {
+        return getVendraInfo();
+      }
+      if (input.includes('portfolio') || input.includes('showcase') || input.includes('case')) {
+        return getPortfolioInfo();
+      }
+      if (input.includes('contact') || input.includes('support') || input.includes('reach')) {
+        return getContactInfo();
+      }
+      if (input.includes('product') || input.includes('app')) {
+        return getProductsInfo();
       }
       return getMainMenu();
   }
@@ -95,6 +156,15 @@ async function handleMainMenu(phoneNumber: string, messageText: string, userStat
 
 async function handleLeadForm(phoneNumber: string, messageText: string, userState: BotState): Promise<string> {
   const input = messageText.trim();
+  const lowerInput = input.toLowerCase();
+
+  // Allow users to exit lead form and return to menu
+  if (lowerInput === 'menu' || lowerInput === 'cancel' || lowerInput === 'exit' || lowerInput === 'back') {
+    userState.currentMenu = 'main';
+    userState.leadFormStep = 0;
+    userState.leadData = {};
+    return getMainMenu();
+  }
 
   switch (userState.leadFormStep) {
     case 1: // Project type
@@ -176,7 +246,10 @@ Please select from the menu below:
 8️⃣ *Get Quote/Consultation* - Free Project Assessment
 9️⃣ *Contact & Support* - Get in Touch
 
-💡 Simply type a number (1-9) or tap any option above`;
+💡 *How to use:*
+• Type a number (1-9)
+• Use keywords like "quote", "ai", "web", "vendra"
+• Type "menu" anytime to return here`;
 }
 
 function getCustomDevelopmentInfo(userState: BotState): string {
