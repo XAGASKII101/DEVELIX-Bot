@@ -48,6 +48,15 @@ class WhatsAppBot {
         },
         browser: Browsers.macOS('Desktop'),
         generateHighQualityLinkPreview: true,
+        syncFullHistory: false,
+        markOnlineOnConnect: true,
+        connectTimeoutMs: 60_000,
+        defaultQueryTimeoutMs: 60_000,
+        keepAliveIntervalMs: 10_000,
+        emitOwnEvents: false,
+        getMessage: async (key) => {
+          return { conversation: 'hello' }
+        }
       });
 
       this.sock.ev.on('creds.update', saveCreds);
@@ -72,21 +81,31 @@ class WhatsAppBot {
     }
 
     if (connection === 'close') {
-      const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut;
+      this.isConnected = false;
+      const statusCode = (lastDisconnect?.error as Boom)?.output?.statusCode;
       
       logger.info('Connection closed due to', lastDisconnect?.error);
       
-      if (shouldReconnect) {
-        logger.info('Reconnecting...');
-        this.start();
+      // Handle different disconnect reasons
+      if (statusCode === DisconnectReason.loggedOut) {
+        logger.info('Device logged out, please restart to reconnect');
+        this.qrCodeGenerated = false;
+      } else if (statusCode === DisconnectReason.restartRequired) {
+        logger.info('Restart required, restarting...');
+        setTimeout(() => this.start(), 2000);
+      } else if (statusCode === DisconnectReason.timedOut || statusCode === DisconnectReason.connectionLost) {
+        logger.info('Connection timed out or lost, attempting reconnect...');
+        setTimeout(() => this.start(), 5000);
       } else {
-        logger.info('Logged out, please restart to reconnect');
-        this.isConnected = false;
+        logger.info('Reconnecting in 3 seconds...');
+        setTimeout(() => this.start(), 3000);
       }
     } else if (connection === 'open') {
       logger.info('WhatsApp bot connected successfully! 🎉');
       this.isConnected = true;
       this.qrCodeGenerated = false;
+    } else if (connection === 'connecting') {
+      logger.info('Connecting to WhatsApp...');
     }
   }
 
@@ -106,16 +125,26 @@ class WhatsAppBot {
       throw new Error('WhatsApp bot not initialized');
     }
 
+    if (!this.isConnected) {
+      throw new Error('WhatsApp bot not connected. Please wait for connection or scan QR code.');
+    }
+
     try {
       // Remove any non-digit characters and ensure proper format
       const cleanPhoneNumber = phoneNumber.replace(/\D/g, '');
+      
+      // Validate phone number format
+      if (cleanPhoneNumber.length < 10 || cleanPhoneNumber.length > 15) {
+        throw new Error('Invalid phone number format');
+      }
+      
       const pairingCode = await this.sock.requestPairingCode(cleanPhoneNumber);
       
       logger.info(`Pairing code generated for ${cleanPhoneNumber}: ${pairingCode}`);
       return pairingCode;
     } catch (error) {
       logger.error('Error generating pairing code:', error);
-      throw error;
+      throw new Error(`Failed to generate pairing code: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
