@@ -1,0 +1,264 @@
+Develix Logo
+Develix Inc
+Solutions
+Apps
+Elixa Coin
+Vendra
+Case Studies
+About
+Get Started
+Live on Polygon Network
+Elixa Coin
+Democratizing Crypto
+Africa's gateway to decentralized finance
+Built for everyone, accessible to all
+
+2.5M
+Total Supply
+₦850
+Current Price
+15K+
+Holders
+99.9%
+Uptime
+Get ELX Tokens
+Technical Docs
+Live Network Metrics
+Real-time insights into the Elixa Coin ecosystem performance and adoption
+
+24h Transaction Volume
+₦12.8M
++18.5%
+vs yesterday
+68% of daily target
+Active Wallets
+8,247
+Last 24 hours
+Nigeria
+4,521
+Ghana
+1,832
+Kenya
+1,894
+Network Health
+Excellent
+Block Time
+2.1s
+Gas Fees
+₦0.05
+Validator Nodes
+127
+Recent Transactions
+Live Feed
+Transfer
+0x742d...2f8e → 0x9a1b...7c3d
+1,250 ELX
+2 mins ago
+Staking Reward
+Validator: node-ng-01
++45 ELX
+5 mins ago
+DeFi Swap
+ELX ↔ USDC
+500 ELX
+8 mins ago
+Technical Architecture
+Built on Polygon for scalability, security, and low transaction costs
+
+Blockchain Architecture
+L1
+Ethereum Mainnet
+Security & Final Settlement
+L2
+Polygon Network
+Fast & Low-Cost Transactions
+dApp
+Elixa Applications
+DeFi, Payments, Staking
+Tokenomics
+2,500,000 ELX
+Total Supply (Fixed)
+Public Sale
+40%
+Ecosystem Development
+25%
+Team & Advisors
+20%
+Liquidity & Reserves
+15%
+Security Audited
+Smart contracts audited by leading blockchain security firms
+
+View Report →
+Regulatory Compliant
+Fully compliant with Nigerian SEC and international standards
+
+Learn More →
+Open Source
+Transparent development with public code repositories
+
+View Code →
+Development Roadmap
+Transparent progress tracking with completed milestones and upcoming features
+
+COMPLETED
+Project Kickoff
+Formation of team, vision, and core idea development
+
+Q1 2025
+IN PROGRESS
+Prototype Development
+Building MVP, smart contracts, and core platform
+
+Q2–Q3 2025
+60% Complete
+Real-World Applications
+Discover how Elixa Coin is solving real problems across African markets
+
+Cross-Border Payments
+Send money across Africa instantly with minimal fees. Traditional remittances cost 8-12%, ELX costs less than 1%.
+
+₦50B+
+processed monthly
+Merchant Payments
+Accept ELX payments in your business. Instant settlement, lower fees than traditional payment processors.
+
+2,500+
+merchants onboarded
+DeFi Savings
+Earn up to 12% APY through staking and liquidity provision. Better returns than traditional savings accounts.
+
+₦2.8B
+total value locked
+Sarah Okafor - Small Business Owner
+Sarah Okafor
+Small Business Owner, Lagos
+
+"ELX has transformed my business. I can now accept payments from customers across West Africa instantly, and the fees are so much lower than traditional banks."
++340%
+revenue growth
+-85%
+payment fees
+Michael Asante - Freelancer
+Michael Asante
+Freelance Developer, Accra
+
+"Receiving payments from international clients used to take days and cost a fortune. With ELX, I get paid instantly and keep more of what I earn."
+2 mins
+payment time
+₦15K
+monthly savings
+Partnership Ecosystem
+Strategic alliances driving adoption and building trust across Africa
+
+Financial Institution Partners
+GT
+GTBank
+Direct bank integration for seamless fiat-to-ELX conversion
+
+Live Integration
+A
+Access Bank
+Corporate treasury services and institutional custody
+
+Live Integration
+Z
+Zenith Bank
+SME banking solutions with crypto integration
+
+In Development
+Technology Infrastructure
+P
+Polygon
+Layer 2 Scaling
+
+AWS Partnership
+AWS
+Cloud Infrastructure
+
+C
+Chainlink
+Price Oracles
+
+I
+IPFS
+Decentralized Storage
+
+Developer Resources
+Comprehensive documentation and tools for building on Elixa Coin
+
+API Documentation
+Complete REST API reference for integrating ELX payments and wallet functionality
+
+Endpoints
+25+
+Rate Limit
+1000/min
+View API Docs
+SDK Libraries
+Official SDKs for popular programming languages and frameworks
+
+JavaScript
+Python
+PHP
+React
+Download SDKs
+Smart Contracts
+Verified smart contract addresses and ABI for direct blockchain interaction
+
+Token Contract: 0x742d35Cc...
+Staking Contract: 0x9a1b7c3d...
+View Contracts
+Quick Integration Example
+// Initialize Elixa SDK
+import { ElixaSDK } from '@elixa/sdk';
+
+const elixa = new ElixaSDK({
+  apiKey: 'elx_demo_key_2025',
+  network: 'polygon-mainnet'
+});
+
+// Send ELX tokens
+const transaction = await elixa.transfer({
+  to: '0x742d35Cc6634C0532925a3b8D404fD4C0f4b2f8e',
+  amount: '100.50',
+  currency: 'ELX'
+});
+
+console.log('Transaction hash:', transaction.hash);
+// Output: 0x1a2b3c4d5e6f7890abcdef...
+View Full Example →
+Try in Sandbox →
+Join the Elixa Community
+Be part of Africa's cryptocurrency revolution. Get your ELX tokens and start building the future of finance.
+
+15,247
+Token Holders
+8,500+
+Discord Members
+2,100+
+Developers
+45
+Countries
+Get ELX Tokens
+Download Whitepaper
+Join Discord
+Develix Logo
+Develix Inc
+Elixa Coin - Democratizing cryptocurrency access across Africa and beyond. Built for everyone, accessible to all.
+
+Resources
+Whitepaper
+API Docs
+SDK Downloads
+Security Audit
+Company
+About Develix
+All Solutions
+Case Studies
+Press Kit
+© 2025 Develix. All Rights Reserved. ELX Token deployed on Polygon Network.
+
+Privacy Policy
+Terms of Service
+Risk Disclosure
