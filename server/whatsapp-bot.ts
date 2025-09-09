@@ -65,7 +65,7 @@ class WhatsAppBot {
 
       logger.info('WhatsApp bot starting...');
     } catch (error) {
-      logger.error('Error starting WhatsApp bot:', error);
+      logger.error('Error starting WhatsApp bot:', { error });
       throw error;
     }
   }
@@ -116,7 +116,7 @@ class WhatsAppBot {
     try {
       await handleMessage(this.sock, message);
     } catch (error) {
-      logger.error('Error handling message:', error);
+      logger.error('Error handling message:', { error });
     }
   }
 
@@ -143,7 +143,7 @@ class WhatsAppBot {
       logger.info(`Pairing code generated for ${cleanPhoneNumber}: ${pairingCode}`);
       return pairingCode;
     } catch (error) {
-      logger.error('Error generating pairing code:', error);
+      logger.error('Error generating pairing code:', { error });
       throw new Error(`Failed to generate pairing code: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -165,7 +165,7 @@ class WhatsAppBot {
       await this.sock.sendMessage(jid, { text: message });
       logger.info(`Message sent to ${phoneNumber}`);
     } catch (error) {
-      logger.error('Error sending message:', error);
+      logger.error('Error sending message:', { error });
       throw error;
     }
   }
