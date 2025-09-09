@@ -1,0 +1,439 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Develix WhatsApp Bot - Financial Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          borderRadius: {
+            lg: "var(--radius)",
+            md: "calc(var(--radius) - 2px)",
+            sm: "calc(var(--radius) - 4px)",
+          },
+          colors: {
+            background: "var(--background)",
+            foreground: "var(--foreground)",
+            card: {
+              DEFAULT: "var(--card)",
+              foreground: "var(--card-foreground)",
+            },
+            primary: {
+              DEFAULT: "var(--primary)",
+              foreground: "var(--primary-foreground)",
+            },
+            secondary: {
+              DEFAULT: "var(--secondary)",
+              foreground: "var(--secondary-foreground)",
+            },
+            muted: {
+              DEFAULT: "var(--muted)",
+              foreground: "var(--muted-foreground)",
+            },
+            accent: {
+              DEFAULT: "var(--accent)",
+              foreground: "var(--accent-foreground)",
+            },
+            border: "var(--border)",
+            input: "var(--input)",
+            ring: "var(--ring)",
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"],
+          }
+        },
+      }
+    };
+    </script>
+    <style>
+        :root {
+            --background: hsl(220 10% 97%);
+            --foreground: hsl(220 15% 15%);
+            --card: hsl(0 0% 100%);
+            --card-foreground: hsl(220 15% 15%);
+            --primary: hsl(217 91% 60%);
+            --primary-foreground: hsl(0 0% 98%);
+            --secondary: hsl(220 14% 96%);
+            --secondary-foreground: hsl(220 15% 25%);
+            --muted: hsl(220 14% 96%);
+            --muted-foreground: hsl(220 13% 46%);
+            --accent: hsl(142 76% 36%);
+            --accent-foreground: hsl(0 0% 98%);
+            --border: hsl(220 13% 91%);
+            --input: hsl(220 13% 91%);
+            --ring: hsl(217 91% 60%);
+            --radius: 0.5rem;
+        }
+        
+        .whatsapp-green { background-color: #25D366; }
+        .whatsapp-dark { background-color: #128C7E; }
+        .whatsapp-bg { background-color: #ECE5DD; }
+        
+        .message-bubble {
+            max-width: 85%;
+            word-wrap: break-word;
+            animation: fadeInUp 0.3s ease-out;
+        }
+        
+        .bot-message {
+            background: white;
+            margin-left: 0;
+            margin-right: auto;
+        }
+        
+        .user-message {
+            background: #DCF8C6;
+            margin-left: auto;
+            margin-right: 0;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .typing-indicator {
+            background: white;
+            border-radius: 18px;
+            padding: 8px 12px;
+            margin: 4px 0;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="bg-background font-sans">
+    <!-- @COMPONENT: WhatsAppBotInterface -->
+    <div class="min-h-screen bg-whatsapp-bg">
+        <!-- WhatsApp Header -->
+        <header class="whatsapp-green text-white p-4 shadow-lg sticky top-0 z-10">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center font-bold text-sm">
+                    DX
+                </div>
+                <div class="flex-1">
+                    <h1 class="font-semibold text-lg">Develix Financial Bot</h1>
+                    <p class="text-xs opacity-90">Online • AI-Powered Banking</p>
+                </div>
+                <div class="flex space-x-2">
+                    <button class="p-2 hover:bg-whatsapp-dark rounded-full transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                        </svg>
+                    </button>
+                    <button class="p-2 hover:bg-whatsapp-dark rounded-full transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Chat Container -->
+        <main class="flex flex-col h-[calc(100vh-140px)] max-w-md mx-auto">
+            <!-- Messages Area -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-4" data-mock="true">
+                
+                <!-- Welcome Message -->
+                <div class="message-bubble bot-message bg-white p-3 rounded-lg shadow-sm">
+                    <div class="flex items-start space-x-2">
+                        <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                            DX
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-primary mb-1">Develix Financial Bot</p>
+                            <p class="text-sm text-foreground">Welcome to Develix Financial Services! 🇳🇬</p>
+                            <p class="text-sm text-muted-foreground mt-2">I'm your AI-powered banking assistant. I can help you with various financial services.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pairing Success Message -->
+                <div class="message-bubble bot-message bg-white p-3 rounded-lg shadow-sm">
+                    <div class="flex items-start space-x-2">
+                        <div class="w-8 h-8 bg-accent rounded-full flex items-center justify-center text-white text-xs">
+                            ✓
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm text-accent font-medium mb-1">Connection Successful</p>
+                            <p class="text-sm text-foreground">Your device has been paired successfully with Develix Bot.</p>
+                            <p class="text-xs text-muted-foreground mt-1 font-mono">Pair Code: DX-2025-NGR</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Menu -->
+                <div class="message-bubble bot-message bg-white p-4 rounded-lg shadow-sm">
+                    <div class="mb-3">
+                        <h3 class="text-sm font-semibold text-foreground mb-2">Main Menu - Choose a Service:</h3>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-2 hover:bg-secondary rounded-md transition-colors" data-command="1">
+                            <span class="text-primary font-mono">1.</span> <span class="text-sm">Check Balance 💰</span>
+                        </button>
+                        <button class="w-full text-left p-2 hover:bg-secondary rounded-md transition-colors" data-command="2">
+                            <span class="text-primary font-mono">2.</span> <span class="text-sm">Airtime Top Up 📱</span>
+                        </button>
+                        <button class="w-full text-left p-2 hover:bg-secondary rounded-md transition-colors" data-command="3">
+                            <span class="text-primary font-mono">3.</span> <span class="text-sm">Send Money - UBA to UBA 🏦</span>
+                        </button>
+                        <button class="w-full text-left p-2 hover:bg-secondary rounded-md transition-colors" data-command="4">
+                            <span class="text-primary font-mono">4.</span> <span class="text-sm">Send Money to Other Banks 🔄</span>
+                        </button>
+                        <button class="w-full text-left p-2 hover:bg-secondary rounded-md transition-colors" data-command="5">
+                            <span class="text-primary font-mono">5.</span> <span class="text-sm">Bill Payments ⚡</span>
+                        </button>
+                        <button class="w-full text-left p-2 hover:bg-secondary rounded-md transition-colors" data-command="6">
+                            <span class="text-primary font-mono">6.</span> <span class="text-sm">Create PIN 🔐</span>
+                        </button>
+                        <button class="w-full text-left p-2 hover:bg-secondary rounded-md transition-colors" data-command="7">
+                            <span class="text-primary font-mono">7.</span> <span class="text-sm">Customer Care 📞</span>
+                        </button>
+                    </div>
+                    
+                    <div class="mt-3 pt-3 border-t border-border">
+                        <p class="text-xs text-muted-foreground">Type a number (1-7) to select a service</p>
+                        <p class="text-xs text-muted-foreground">Powered by Develix AI • Secure & Fast</p>
+                    </div>
+                </div>
+
+                <!-- User Input Example -->
+                <div class="message-bubble user-message bg-green-100 p-3 rounded-lg ml-auto">
+                    <p class="text-sm text-foreground" data-mock="true">1</p>
+                    <p class="text-xs text-muted-foreground mt-1">12:45 PM ✓✓</p>
+                </div>
+
+                <!-- Balance Check Response -->
+                <div class="message-bubble bot-message bg-white p-4 rounded-lg shadow-sm">
+                    <div class="mb-3">
+                        <h3 class="text-sm font-semibold text-accent mb-2">💰 Account Balance</h3>
+                    </div>
+                    
+                    <div class="bg-secondary rounded-lg p-3 mb-3">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm text-muted-foreground">Current Balance</span>
+                            <span class="text-lg font-bold text-foreground" data-mock="true">₦85,420.50</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm text-muted-foreground">Available Balance</span>
+                            <span class="text-sm font-medium text-foreground" data-mock="true">₦85,420.50</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-muted-foreground">Account Number</span>
+                            <span class="text-sm font-mono text-foreground" data-mock="true">2034****567</span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-xs text-muted-foreground">
+                        <p>Last updated: <span data-mock="true">12:45 PM, Jan 15, 2025</span></p>
+                        <p class="mt-1">✅ Powered by Develix Security</p>
+                    </div>
+                </div>
+
+                <!-- Another User Input -->
+                <div class="message-bubble user-message bg-green-100 p-3 rounded-lg ml-auto">
+                    <p class="text-sm text-foreground" data-mock="true">2</p>
+                    <p class="text-xs text-muted-foreground mt-1">12:46 PM ✓✓</p>
+                </div>
+
+                <!-- Airtime Top Up Menu -->
+                <div class="message-bubble bot-message bg-white p-4 rounded-lg shadow-sm">
+                    <div class="mb-3">
+                        <h3 class="text-sm font-semibold text-foreground mb-2">📱 Airtime Top Up</h3>
+                    </div>
+                    
+                    <div class="space-y-2 mb-3">
+                        <button class="w-full text-left p-2 hover:bg-secondary rounded-md transition-colors border border-border">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-red-600 text-lg">📶</span>
+                                <span class="text-sm font-medium">MTN Nigeria</span>
+                            </div>
+                        </button>
+                        <button class="w-full text-left p-2 hover:bg-secondary rounded-md transition-colors border border-border">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-green-600 text-lg">📶</span>
+                                <span class="text-sm font-medium">Glo Mobile</span>
+                            </div>
+                        </button>
+                        <button class="w-full text-left p-2 hover:bg-secondary rounded-md transition-colors border border-border">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-blue-600 text-lg">📶</span>
+                                <span class="text-sm font-medium">Airtel Nigeria</span>
+                            </div>
+                        </button>
+                        <button class="w-full text-left p-2 hover:bg-secondary rounded-md transition-colors border border-border">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-purple-600 text-lg">📶</span>
+                                <span class="text-sm font-medium">9mobile</span>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <div class="bg-muted rounded-lg p-3">
+                        <p class="text-xs text-muted-foreground mb-2">Quick Amounts:</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button class="bg-background border border-border rounded px-3 py-1 text-xs hover:bg-secondary transition-colors" data-mock="true">₦100</button>
+                            <button class="bg-background border border-border rounded px-3 py-1 text-xs hover:bg-secondary transition-colors" data-mock="true">₦200</button>
+                            <button class="bg-background border border-border rounded px-3 py-1 text-xs hover:bg-secondary transition-colors" data-mock="true">₦500</button>
+                        </div>
+                    </div>
+                    
+                    <p class="text-xs text-muted-foreground mt-3">Select network or type amount</p>
+                </div>
+
+                <!-- Customer Care Example -->
+                <div class="message-bubble user-message bg-green-100 p-3 rounded-lg ml-auto">
+                    <p class="text-sm text-foreground" data-mock="true">7</p>
+                    <p class="text-xs text-muted-foreground mt-1">12:48 PM ✓✓</p>
+                </div>
+
+                <div class="message-bubble bot-message bg-white p-4 rounded-lg shadow-sm">
+                    <div class="mb-3">
+                        <h3 class="text-sm font-semibold text-foreground mb-2">📞 Customer Care</h3>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="bg-primary/5 border border-primary/20 rounded-lg p-3">
+                            <h4 class="text-sm font-medium text-primary mb-2">Contact Options</h4>
+                            <div class="space-y-2 text-sm">
+                                <p><span class="font-medium">Phone:</span> <span class="font-mono" data-mock="true">+234 810 751 6059</span></p>
+                                <p><span class="font-medium">Email:</span> <span class="font-mono" data-mock="true">support@develix.com</span></p>
+                                <p><span class="font-medium">Hours:</span> 24/7 Available</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-accent/5 border border-accent/20 rounded-lg p-3">
+                            <h4 class="text-sm font-medium text-accent mb-2">Quick Support</h4>
+                            <div class="space-y-1">
+                                <button class="w-full text-left text-sm text-foreground hover:text-primary transition-colors" data-mock="true">• Reset Transaction PIN</button>
+                                <button class="w-full text-left text-sm text-foreground hover:text-primary transition-colors" data-mock="true">• Report Unauthorized Transaction</button>
+                                <button class="w-full text-left text-sm text-foreground hover:text-primary transition-colors" data-mock="true">• Update Profile Information</button>
+                                <button class="w-full text-left text-sm text-foreground hover:text-primary transition-colors" data-mock="true">• Account Upgrade Request</button>
+                            </div>
+                        </div>
+                        
+                        <div class="text-xs text-muted-foreground">
+                            <p>💡 Tip: For faster support, have your account number ready</p>
+                            <p class="mt-1">🔒 All conversations are encrypted end-to-end</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Typing Indicator -->
+                <div class="flex items-center space-x-2" data-mock="true">
+                    <div class="typing-indicator">
+                        <div class="flex items-center space-x-1">
+                            <div class="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
+                            <div class="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                            <div class="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        </div>
+                    </div>
+                    <span class="text-xs text-muted-foreground">Develix Bot is typing...</span>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="bg-white border-t border-border p-4">
+                <div class="flex items-center space-x-3">
+                    <button class="p-2 text-muted-foreground hover:text-foreground transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+                        </svg>
+                    </button>
+                    
+                    <div class="flex-1 relative">
+                        <input 
+                            type="text" 
+                            placeholder="Type a number (1-7) or message..." 
+                            class="w-full px-4 py-2 border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                            data-mock="true"
+                        />
+                    </div>
+                    
+                    <button class="p-2 text-accent hover:text-accent-foreground hover:bg-accent rounded-full transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="flex space-x-2 mt-3 overflow-x-auto">
+                    <button class="flex-shrink-0 bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-xs hover:bg-muted transition-colors" data-mock="true">
+                        Balance
+                    </button>
+                    <button class="flex-shrink-0 bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-xs hover:bg-muted transition-colors" data-mock="true">
+                        Transfer
+                    </button>
+                    <button class="flex-shrink-0 bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-xs hover:bg-muted transition-colors" data-mock="true">
+                        Airtime
+                    </button>
+                    <button class="flex-shrink-0 bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-xs hover:bg-muted transition-colors" data-mock="true">
+                        Help
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Security Banner -->
+        <div class="bg-primary text-primary-foreground p-2 text-center">
+            <p class="text-xs">🔒 Secured by Develix AI • End-to-End Encrypted</p>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: WhatsAppBotInterface -->
+
+    <script>
+        // TODO: Implement Baileys WhatsApp bot integration
+        // TODO: Add pairing code functionality
+        // TODO: Implement command routing system
+        // TODO: Add user session management
+        // TODO: Integrate with banking APIs
+        // TODO: Add multi-language support
+
+        // Mock interaction for demonstration
+        (() => {
+            const commandButtons = document.querySelectorAll('[data-command]');
+            const quickActions = document.querySelectorAll('button[data-mock="true"]');
+            
+            commandButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const command = this.getAttribute('data-command');
+                    console.log(`Command ${command} selected`);
+                    // TODO: Route to appropriate command handler
+                });
+            });
+
+            quickActions.forEach(button => {
+                button.addEventListener('click', function() {
+                    console.log('Quick action clicked:', this.textContent);
+                    // TODO: Handle quick action
+                });
+            });
+
+            // Mock typing indicator animation
+            const typingIndicator = document.querySelector('.typing-indicator');
+            if (typingIndicator) {
+                setInterval(() => {
+                    typingIndicator.style.opacity = typingIndicator.style.opacity === '0' ? '1' : '0';
+                }, 3000);
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Develix WhatsApp Bot - Interactive Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          borderRadius: {
+            lg: "var(--radius)",
+            md: "calc(var(--radius) - 2px)",
+            sm: "calc(var(--radius) - 4px)",
+          },
+          colors: {
+            background: "var(--background)",
+            foreground: "var(--foreground)",
+            primary: {
+              DEFAULT: "var(--primary)",
+              foreground: "var(--primary-foreground)",
+            },
+            secondary: {
+              DEFAULT: "var(--secondary)",
+              foreground: "var(--secondary-foreground)",
+            },
+            muted: {
+              DEFAULT: "var(--muted)",
+              foreground: "var(--muted-foreground)",
+            },
+            accent: {
+              DEFAULT: "var(--accent)",
+              foreground: "var(--accent-foreground)",
+            },
+            border: "var(--border)",
+            ring: "var(--ring)",
+          }
+        }
+      }
+    };
+    </script>
+    <style>
+    :root {
+      --background: hsl(220 10% 97%);
+      --foreground: hsl(222.2 84% 4.9%);
+      --primary: hsl(142 76% 36%);
+      --primary-foreground: hsl(355.7 100% 97.3%);
+      --secondary: hsl(210 40% 96%);
+      --secondary-foreground: hsl(222.2 47.4% 11.2%);
+      --muted: hsl(210 40% 96%);
+      --muted-foreground: hsl(215.4 16.3% 46.9%);
+      --accent: hsl(262 83% 58%);
+      --accent-foreground: hsl(210 40% 98%);
+      --border: hsl(214.3 31.8% 91.4%);
+      --ring: hsl(262 83% 58%);
+      --radius: 0.75rem;
+      --whatsapp-bg: #E5DDD5;
+      --whatsapp-green: #25D366;
+      --whatsapp-dark-green: #128C7E;
+      --whatsapp-light-green: #DCF8C6;
+      --develix-purple: #6366F1;
+    }
+
+    .chat-pattern {
+      background-color: var(--whatsapp-bg);
+      background-image: 
+        radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
+      background-size: 20px 20px;
+    }
+
+    .message-bubble-incoming {
+      background: #FFFFFF;
+      border-radius: 7.5px 7.5px 7.5px 0px;
+      box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+    }
+
+    .message-bubble-outgoing {
+      background: var(--whatsapp-light-green);
+      border-radius: 7.5px 7.5px 0px 7.5px;
+      box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+    }
+
+    .typing-indicator {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .menu-item:hover {
+      background-color: rgba(99, 102, 241, 0.1);
+    }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <!-- Mobile WhatsApp Interface -->
+    <div class="max-w-md mx-auto bg-white shadow-2xl">
+        <!-- Header -->
+        <div class="bg-primary text-primary-foreground px-4 py-3 flex items-center space-x-3">
+            <div class="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-white font-bold text-lg">
+                D
+            </div>
+            <div class="flex-1">
+                <h2 class="font-semibold text-lg">Develix Bot</h2>
+                <p class="text-xs text-green-100">Online • AI Assistant</p>
+            </div>
+            <div class="flex space-x-3">
+                <button class="text-primary-foreground hover:text-green-100">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                    </svg>
+                </button>
+                <button class="text-primary-foreground hover:text-green-100">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                        <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zM8 15H5v-5h3v5zm0-6H5V6h3v3zm6 6h-3v-5h3v5zm0-6h-3V6h3v3z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-pattern min-h-screen pb-20" style="height: 600px; overflow-y: auto;" id="chatArea">
+            <div class="p-4 space-y-4">
+                
+                <!-- Welcome Message -->
+                <div class="flex justify-start">
+                    <div class="message-bubble-incoming max-w-xs p-3">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <div class="w-6 h-6 bg-accent rounded-full flex items-center justify-center">
+                                <span class="text-white text-xs font-bold">D</span>
+                            </div>
+                            <span class="font-semibold text-sm" style="color: var(--develix-purple)">Develix Bot</span>
+                        </div>
+                        <p class="text-sm text-gray-800 leading-relaxed">
+                            🎉 Welcome to <strong>Develix</strong>! 
+                            <br><br>
+                            🚀 <em>Technology Without Barriers</em>
+                            <br><br>
+                            I'm your AI assistant ready to help you explore our enterprise solutions, consumer apps, and blockchain innovations built in Nigeria for the world.
+                        </p>
+                        <p class="text-xs text-gray-500 mt-2">10:30 AM</p>
+                    </div>
+                </div>
+
+                <!-- Main Menu -->
+                <div class="flex justify-start">
+                    <div class="message-bubble-incoming max-w-xs p-3">
+                        <p class="text-sm font-semibold text-gray-800 mb-3">📋 How can I help you today?</p>
+                        <div class="space-y-1">
+                            <div class="menu-item p-2 rounded cursor-pointer transition-colors" data-option="1">
+                                <span class="text-sm">1️⃣ Enterprise Solutions</span>
+                            </div>
+                            <div class="menu-item p-2 rounded cursor-pointer transition-colors" data-option="2">
+                                <span class="text-sm">2️⃣ Consumer Apps</span>
+                            </div>
+                            <div class="menu-item p-2 rounded cursor-pointer transition-colors" data-option="3">
+                                <span class="text-sm">3️⃣ Elixa Coin Info</span>
+                            </div>
+                            <div class="menu-item p-2 rounded cursor-pointer transition-colors" data-option="4">
+                                <span class="text-sm">4️⃣ Vendra Marketplace</span>
+                            </div>
+                            <div class="menu-item p-2 rounded cursor-pointer transition-colors" data-option="5">
+                                <span class="text-sm">5️⃣ Case Studies</span>
+                            </div>
+                            <div class="menu-item p-2 rounded cursor-pointer transition-colors" data-option="6">
+                                <span class="text-sm">6️⃣ About Develix</span>
+                            </div>
+                            <div class="menu-item p-2 rounded cursor-pointer transition-colors" data-option="7">
+                                <span class="text-sm">7️⃣ Contact & Support</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">10:30 AM</p>
+                    </div>
+                </div>
+
+                <!-- User Response Example -->
+                <div class="flex justify-end">
+                    <div class="message-bubble-outgoing max-w-xs p-3">
+                        <p class="text-sm text-gray-800">1</p>
+                        <p class="text-xs text-gray-600 mt-2">10:31 AM</p>
+                    </div>
+                </div>
+
+                <!-- Enterprise Solutions Response -->
+                <div class="flex justify-start">
+                    <div class="message-bubble-incoming max-w-xs p-3">
+                        <p class="text-sm font-semibold text-gray-800 mb-2">🏢 Enterprise Solutions</p>
+                        <p class="text-sm text-gray-800 leading-relaxed mb-3">
+                            Transform your business with our AI-powered solutions designed for African enterprises. We've helped 50+ companies achieve:
+                        </p>
+                        <div class="space-y-1 text-sm text-gray-700">
+                            <p>• ₦2.5B+ Revenue Generated</p>
+                            <p>• 99.9% Uptime SLA</p>
+                            <p>• 45% Avg. Cost Reduction</p>
+                        </div>
+                        <div class="mt-3 space-y-1">
+                            <div class="menu-item p-2 rounded cursor-pointer transition-colors" data-option="1a">
+                                <span class="text-sm">🏦 Financial Services</span>
+                            </div>
+                            <div class="menu-item p-2 rounded cursor-pointer transition-colors" data-option="1b">
+                                <span class="text-sm">🏥 Healthcare Solutions</span>
+                            </div>
+                            <div class="menu-item p-2 rounded cursor-pointer transition-colors" data-option="1c">
+                                <span class="text-sm">🛒 Retail & E-commerce</span>
+                            </div>
+                            <div class="menu-item p-2 rounded cursor-pointer transition-colors" data-option="1d">
+                                <span class="text-sm">📞 Schedule Consultation</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">10:31 AM</p>
+                    </div>
+                </div>
+
+                <!-- Another User Response -->
+                <div class="flex justify-end">
+                    <div class="message-bubble-outgoing max-w-xs p-3">
+                        <p class="text-sm text-gray-800">3</p>
+                        <p class="text-xs text-gray-600 mt-2">10:32 AM</p>
+                    </div>
+                </div>
+
+                <!-- Elixa Coin Response -->
+                <div class="flex justify-start">
+                    <div class="message-bubble-incoming max-w-xs p-3">
+                        <p class="text-sm font-semibold text-gray-800 mb-2">💎 Elixa Coin (ELX)</p>
+                        <p class="text-sm text-gray-800 leading-relaxed mb-3">
+                            Africa's gateway to decentralized finance! Built on Polygon Network for fast, low-cost transactions.
+                        </p>
+                        <div class="bg-gray-50 p-2 rounded mb-3">
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div>
+                                    <p class="font-semibold">Current Price</p>
+                                    <p class="text-green-600">₦850</p>
+                                </div>
+                                <div>
+                                    <p class="font-semibold">Total Supply</p>
+                                    <p>2.5M ELX</p>
+                                </div>
+                                <div>
+                                    <p class="font-semibold">Holders</p>
+                                    <p>15K+</p>
+                                </div>
+                                <div>
+                                    <p class="font-semibold">Uptime</p>
+                                    <p class="text-green-600">99.9%</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="menu-item p-2 rounded cursor-pointer transition-colors" data-option="3a">
+                                <span class="text-sm">📈 Live Network Metrics</span>
+                            </div>
+                            <div class="menu-item p-2 rounded cursor-pointer transition-colors" data-option="3b">
+                                <span class="text-sm">💰 Get ELX Tokens</span>
+                            </div>
+                            <div class="menu-item p-2 rounded cursor-pointer transition-colors" data-option="3c">
+                                <span class="text-sm">📚 Technical Docs</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">10:32 AM</p>
+                    </div>
+                </div>
+
+                <!-- Typing Indicator -->
+                <div class="flex justify-start">
+                    <div class="message-bubble-incoming p-3 typing-indicator">
+                        <div class="flex space-x-1">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Company Info Message -->
+                <div class="flex justify-start">
+                    <div class="message-bubble-incoming max-w-xs p-3">
+                        <p class="text-sm font-semibold text-gray-800 mb-2">🌟 About Our Founders</p>
+                        <div class="space-y-3 text-sm text-gray-700">
+                            <div class="bg-purple-50 p-2 rounded">
+                                <p class="font-semibold">Alexius Dubem (17)</p>
+                                <p class="text-xs">CEO & Co-Founder</p>
+                                <p class="text-xs mt-1">Entrepreneurial spirit with passion for technology and innovation</p>
+                            </div>
+                            <div class="bg-purple-50 p-2 rounded">
+                                <p class="font-semibold">Jerome Ebube (16)</p>
+                                <p class="text-xs">CTO & Co-Founder</p>
+                                <p class="text-xs mt-1">Programmer and systems thinker specializing in blockchain & AI</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-800 mt-2 italic">
+                            "From Anambra State to the world - proving that age is no barrier to innovation!"
+                        </p>
+                        <p class="text-xs text-gray-500 mt-2">10:33 AM</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="absolute bottom-0 left-0 right-0 bg-gray-200 px-3 py-2">
+            <div class="flex items-center space-x-2">
+                <div class="flex-1 bg-white rounded-full px-4 py-2 flex items-center space-x-2">
+                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <input 
+                        type="text" 
+                        placeholder="Type a number or message..." 
+                        class="flex-1 outline-none text-sm"
+                        id="messageInput"
+                    />
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+                    </svg>
+                </div>
+                <button class="bg-primary text-primary-foreground p-2 rounded-full" onclick="sendMessage()">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Desktop Preview Panel -->
+    <div class="hidden lg:block fixed right-4 top-4 w-80 bg-white rounded-lg shadow-xl p-4">
+        <h3 class="font-bold text-lg mb-2 text-gray-800">WhatsApp Bot Features</h3>
+        <div class="space-y-2 text-sm text-gray-600">
+            <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>Baileys Library Integration</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>Pairing Code Authentication</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>Command-Based Menu System</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>Enterprise Solutions Info</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>Elixa Coin & Vendra Details</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>Case Studies & Testimonials</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>Multilingual Support</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>Lead Generation & Booking</span>
+            </div>
+        </div>
+
+        <div class="mt-4 p-3 bg-purple-50 rounded">
+            <p class="text-xs font-semibold text-purple-800">Implementation Notes:</p>
+            <p class="text-xs text-purple-600 mt-1">
+                This mockup demonstrates the user interface and conversation flow. The actual bot would use Baileys library for WhatsApp Web API integration with pairing code authentication as requested.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Simulate interactive behavior
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const option = this.dataset.option;
+                // In real implementation, this would trigger the bot response
+                console.log(`User selected option: ${option}`);
+                
+                // Simulate typing and response
+                simulateTyping();
+            });
+        });
+
+        function simulateTyping() {
+            // This would be handled by the Baileys bot in real implementation
+            console.log('Bot is typing...');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                // In real implementation, this would send message via Baileys
+                console.log(`Sending message: ${message}`);
+                input.value = '';
+                
+                // Simulate bot processing
+                simulateTyping();
+            }
+        }
+
+        // Handle Enter key in input
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Auto-scroll to bottom
+        function scrollToBottom() {
+            const chatArea = document.getElementById('chatArea');
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        // Scroll to bottom on load
+        window.addEventListener('load', scrollToBottom);
+
+        // Simulate real-time conversation flow
+        setTimeout(() => {
+            // Add system message about pairing
+            const chatArea = document.getElementById('chatArea').querySelector('.space-y-4');
+            const systemMessage = document.createElement('div');
+            systemMessage.className = 'flex justify-center';
+            systemMessage.innerHTML = `
+                <div class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded text-xs">
+                    Bot paired successfully with QR code/Pairing code ✅
+                </div>
+            `;
+            chatArea.appendChild(systemMessage);
+            scrollToBottom();
+        }, 3000);
+    </script>
+</body>
+</html>
