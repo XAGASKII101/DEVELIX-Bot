@@ -68,6 +68,8 @@ export class MemStorage implements IStorage {
     const session: WhatsappSession = {
       ...insertSession,
       id,
+      sessionData: insertSession.sessionData ?? null,
+      isActive: insertSession.isActive ?? 1,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -104,6 +106,12 @@ export class MemStorage implements IStorage {
     const lead: Lead = {
       ...insertLead,
       id,
+      name: insertLead.name ?? null,
+      projectType: insertLead.projectType ?? null,
+      budget: insertLead.budget ?? null,
+      timeline: insertLead.timeline ?? null,
+      description: insertLead.description ?? null,
+      status: insertLead.status ?? "new",
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -134,6 +142,7 @@ export class MemStorage implements IStorage {
     const message: BotMessage = {
       ...insertMessage,
       id,
+      isBot: insertMessage.isBot ?? 0,
       timestamp: new Date(),
     };
     this.botMessages.set(id, message);
