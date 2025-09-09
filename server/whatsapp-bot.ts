@@ -113,6 +113,13 @@ class WhatsAppBot {
     const message = m.messages[0];
     if (!message || message.key.fromMe) return;
 
+    // Skip group messages and status updates to avoid decryption errors
+    if (message.key.remoteJid?.includes('@g.us') || 
+        message.key.remoteJid?.includes('@broadcast') ||
+        message.key.remoteJid?.includes('@newsletter')) {
+      return;
+    }
+
     try {
       await handleMessage(this.sock, message);
     } catch (error) {

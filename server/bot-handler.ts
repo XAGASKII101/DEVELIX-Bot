@@ -108,6 +108,11 @@ async function handleMainMenu(phoneNumber: string, messageText: string, userStat
     case 'quotes':
     case 'qoute':
     case 'qotw':
+    case 'quot':
+    case 'quotte':
+    case 'qote':
+    case 'qoute':
+    case 'quotation':
     case 'consultation':
     case 'consult':
     case 'estimate':
@@ -126,7 +131,9 @@ async function handleMainMenu(phoneNumber: string, messageText: string, userStat
     default:
       // Handle keyword matching for more flexibility
       if (input.includes('project') || input.includes('quote') || input.includes('qoute') || 
-          input.includes('development') || input.includes('estimate') || input.includes('consult')) {
+          input.includes('quot') || input.includes('qotw') || input.includes('qote') ||
+          input.includes('development') || input.includes('estimate') || input.includes('consult') ||
+          input.includes('quotation') || input.includes('quotte')) {
         return getQuoteInfo(userState);
       }
       if (input.includes('ai') || input.includes('artificial') || input.includes('machine')) {

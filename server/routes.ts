@@ -15,8 +15,8 @@ const whatsappLimiter = rateLimit({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Configure express trust proxy
-  app.set('trust proxy', false);
+  // Configure express trust proxy for deployment
+  app.set('trust proxy', true);
   
   // Initialize WhatsApp bot
   try {
